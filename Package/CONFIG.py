@@ -29,8 +29,6 @@ def set_global(args):
     arch = ops.getEnv("ARCH_ALT")
     pkg_path = args["pkg_path"]
     output_dir = args["output_path"]
-    pkg_args = args["pkg_args"]
-    web_version = pkg_args["version"]
     tarball_pkg = ops.path_join(pkg_path, TARBALL_FILE)
     tarball_dir = ops.path_join(output_dir, TARBALL_DIR)
     GOROOT=ops.path_join(output_dir, TARBALL_DIR)
@@ -43,8 +41,8 @@ def set_global(args):
         GOARCH=arm
         GOARM=5
     elif arch == "x86_64":
-        GOARCH=
-        GOARM=
+        GOARCH=""
+        GOARM=""
     else:
         sys.exit(1)
 
@@ -52,8 +50,8 @@ def MAIN_ENV(args):
     set_global(args)
 
     ops.mkdir(GOPATH)
-    ops.exportEnv(ops.addEnv("GOPATH", GOPATH))
-    ops.exportEnv(ops.addEnv("GOROOT", GOROOT))
+    ops.exportEnv(ops.setEnv("GOPATH", GOPATH))
+    ops.exportEnv(ops.setEnv("GOROOT", GOROOT))
     ops.exportEnv(ops.addEnv("PATH", ops.path_join(GOROOT, "bin")))
     ops.exportEnv(ops.setEnv("GOARCH", GOARCH))
     ops.exportEnv(ops.setEnv("GOARM", GOARM))
