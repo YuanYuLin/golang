@@ -9,7 +9,8 @@ output_dir = ""
 tarball_pkg = ""
 tarball_dir = ""
 install_dir = ""
-GOPATH=""
+receipes_dir = ""
+#GOPATH=""
 GOROOT=""
 GOARCH=""
 GOARM=""
@@ -21,8 +22,9 @@ def set_global(args):
     global tarball_pkg
     global install_dir
     global tarball_dir
+    global receipes_dir
     global GOROOT
-    global GOPATH
+    #global GOPATH
     global GOARCH
     global GOARM
     global GOOS
@@ -31,15 +33,16 @@ def set_global(args):
     output_dir = args["output_path"]
     tarball_pkg = ops.path_join(pkg_path, TARBALL_FILE)
     tarball_dir = ops.path_join(output_dir, TARBALL_DIR)
+    receipes_dir = ops.path_join(pkg_path, "receipes")
     GOROOT=ops.path_join(output_dir, TARBALL_DIR)
-    GOPATH=ops.path_join(output_dir, "workspace")
+    #GOPATH=ops.path_join(output_dir, "workspace")
 
     if arch == "armhf":
-        GOARCH=arm
-        GOARM=5
+        GOARCH="arm"
+        GOARM="5"
     elif arch == "armel":
-        GOARCH=arm
-        GOARM=5
+        GOARCH="arm"
+        GOARM="5"
     elif arch == "x86_64":
         GOARCH=""
         GOARM=""
@@ -49,13 +52,18 @@ def set_global(args):
 def MAIN_ENV(args):
     set_global(args)
 
-    ops.mkdir(GOPATH)
-    ops.exportEnv(ops.setEnv("GOPATH", GOPATH))
+    #ops.mkdir(GOPATH)
+    #ops.exportEnv(ops.setEnv("GOPATH", GOPATH))
     ops.exportEnv(ops.setEnv("GOROOT", GOROOT))
     ops.exportEnv(ops.addEnv("PATH", ops.path_join(GOROOT, "bin")))
     ops.exportEnv(ops.setEnv("GOARCH", GOARCH))
     ops.exportEnv(ops.setEnv("GOARM", GOARM))
     ops.exportEnv(ops.setEnv("GOOS", GOOS))
+    print "GOROOT=", GOROOT
+    print "PATH=", ops.path_join(GOROOT, "bin")
+    print "GOARCH=", GOARCH
+    print "GOARM=", GOARM
+    print "GOOS=", GOOS
 
     return False
 
@@ -63,6 +71,12 @@ def MAIN_EXTRACT(args):
     set_global(args)
 
     ops.unTarGz(tarball_pkg, output_dir)
+    ops.copyto(ops.path_join(receipes_dir, "libc_shared.mk"), output_dir)
+    ops.copyto(ops.path_join(receipes_dir, "libgo_build.mk"), output_dir)
+    ops.copyto(ops.path_join(receipes_dir, "libgo_cshared.mk"), output_dir)
+    ops.copyto(ops.path_join(receipes_dir, "libgo_exe.mk"), output_dir)
+    ops.copyto(ops.path_join(receipes_dir, "lib_shared.mk"), output_dir)
+    ops.copyto(ops.path_join(receipes_dir, "pkg.mk"), output_dir)
 
     return True
 
