@@ -29,5 +29,5 @@ clean:
 	@echo "$(TARGET_OBJNAME) cleaned up"
 
 build_target:
-	$(GOROOT)/bin/go build -v -x -buildmode=$(BUILDMODE) -o $(TARGET_OBJNAME_MAJOR_MINOR)
+	$(GOROOT)/bin/go build main -v -x -buildmode=$(BUILDMODE) -o $(TARGET_OBJNAME_MAJOR_MINOR) main
 
